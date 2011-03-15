@@ -6,7 +6,7 @@ set :rvm_ruby_string, 'ruby-1.8.7-p299@testgemset'        # Or whatever env you 
 set :rvm_type, :user
 
 set :app_name, :foo
-set :app_dir { "/var/#{stage}/#{app_name}" }
+set(:app_dir) { "/var/#{stage}/#{app_name}" }
 set :user, "mkocher"
 default_run_options[:pty] = true 
 
@@ -20,19 +20,22 @@ end
 desc "Install gems that are needed for a chef run"
 task :install_base_gems do
   run "gem list | grep soloist || gem install soloist --no-rdoc --no-ri"
+  # run "gem list | grep hellspawn || gem install hellspawn --no-rdoc --no-ri"
 end
 
 desc "Upload cookbooks"
 task :upload_cookbooks do
   run "sudo mkdir -p #{app_dir}"
   run "sudo chown -R #{user} #{app_dir}"
+  run "rm #{app_dir}/soloistrc || true"
+  run "rm -r #{app_dir}/chef || true"
   upload("soloistrc", "#{app_dir}/soloistrc")
   upload("chef/", "#{app_dir}/chef/", :via => :scp, :recursive => true)
 end
 
 desc "Run Chef"
 task :run_chef do
-  run "cd #{app_dir} && soloist"
+  run "cd #{app_dir} && PATH=/usr/sbin:$PATH soloist"
 end
 
 desc "bootstrap"

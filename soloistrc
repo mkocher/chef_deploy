@@ -1,4 +1,4 @@
 cookbook_paths:
 - ./chef/cookbooks/
 recipes:
-- joy_of_cooking
+- joy_of_cooking::mysql
