@@ -1,4 +1,11 @@
 cookbook_paths:
 - ./chef/cookbooks/
 recipes:
-- joy_of_cooking::mysql
+- joy_of_cooking::application
+env_variable_switches:
+  APP_NAME:
+    cookbook_paths: []
+    recipes: []
+  APP_DIR:
+    cookbook_paths: []
+    recipes: []
