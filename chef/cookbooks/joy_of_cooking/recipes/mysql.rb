@@ -67,10 +67,6 @@ ruby_block "wait for mysql to come up" do
   end
 end
 
-execute "Give mysql a chance to startup - this sucks" do
-  command "sleep 20"
-end
-
 execute "set the root mysql password" do
   command "#{install_dir}/bin/mysqladmin -uroot password #{mysql_root_password}"
   not_if "#{install_dir}/bin/mysql -uroot -p#{mysql_root_password} -e 'show databases'"
