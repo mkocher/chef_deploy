@@ -1,11 +1,5 @@
-# execute "make src directory" do
-#   dir_name = "#{ENV["APP_DIR"]}"
-#   command "mkdir -p #{dir_name}"
-#   not_if { File.exists?(dir_name) }
-# end
-# 
-
 include_recipe "joy_of_cooking::daemontools"
+include_recipe "joy_of_cooking::mysql"
 
 app_user = "mkocher"
 
@@ -37,19 +31,36 @@ execute "bundle" do
   cwd "#{ENV['APP_DIR']}/src"
 end
 
-
-execute "create daemontools directory" do
-  command "mkdir -p /service/appserver"
+execute "create db" do
+  command "bundle exec rake db:create"
+  user app_user
+  environment 'RACK_ENV' => 'staging'
+  cwd "#{ENV['APP_DIR']}/src"
 end
 
-file "/service/appserver/run" do
+execute "rake db:migrate" do
+  command "bundle exec rake db:migrate"
+  user app_user
+  environment 'RACK_ENV' => 'staging'
+  cwd "#{ENV['APP_DIR']}/src"
+end
+
+execute "create daemontools directory" do
+  command "mkdir -p /service/unicorn"
+end
+
+file "/service/unicorn/run" do
   content %{#!/bin/bash
 cd /var/staging/foo/src
 rvm_path=/home/mkocher/.rvm/
+export RAILS_ENV=staging
 source /home/mkocher/.rvm/scripts/rvm
 rvm use ruby-1.8.7-p299@captest
-exec /command/setuidgid mkocher rackup -p 4567
+exec /command/setuidgid mkocher rackup -p 3000
 }
   mode "0755"
-  # not_if "ls /service/appserver/run"
+end
+
+execute "restart unicorn" do
+  command "svc -k /service/unicorn"
 end

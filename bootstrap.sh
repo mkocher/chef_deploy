@@ -24,7 +24,7 @@ grep "$sudo_string" /etc/sudoers || echo "$sudo_string" >> /etc/sudoers
 cat <<'BOOTSTRAP_AS_USER' > /home/$app_user/bootstrap_as_user.sh
 set -e
 
-bash < <( curl http://rvm.beginrescueend.com/releases/rvm-install-head )
+bash < <( curl --insecure https://rvm.beginrescueend.com/install/rvm )
 
 rvm_include_string='[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"'
 grep "$rvm_include_string" ~/.bashrc || echo "$rvm_include_string" >> ~/.bashrc

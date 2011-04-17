@@ -1,8 +1,7 @@
 require 'capistrano/ext/multistage'
+require "rvm/capistrano"  # Use the gem, don't unshift RVM onto the load path, that's crazy.
 
-$:.unshift(File.expand_path('./lib', ENV['rvm_path'])) # Add RVM's lib directory to the load path.
-require "rvm/capistrano"                  # Load RVM's capistrano plugin.
-set :rvm_ruby_string, 'ruby-1.8.7-p299@captest'        # Or whatever env you want it to run in.
+set :rvm_ruby_string, ENV['rvm_ruby_string']
 set :rvm_type, :user
 
 set :app_name, :foo
@@ -21,7 +20,6 @@ desc "Install gems that are needed for a chef run"
 task :install_base_gems do
   run "gem list | grep soloist || gem install soloist --no-rdoc --no-ri"
   run "gem list | grep bundler || gem install bundler --no-rdoc --no-ri"
-  # run "gem list | grep hellspawn || gem install hellspawn --no-rdoc --no-ri"
 end
 
 desc "Upload cookbooks"
@@ -36,7 +34,7 @@ end
 
 desc "Run Chef"
 task :run_chef do
-  run "cd #{app_dir} && PATH=/usr/sbin:$PATH APP_NAME=#{fetch(:app_name)} APP_DIR=#{fetch(:app_dir)} soloist"
+  run "cd #{app_dir} && PATH=/usr/sbin:$PATH APP_NAME=#{fetch(:app_name)} APP_DIR=#{fetch(:app_dir)} LOG_LEVEL=debug soloist"
 end
 
 desc "bootstrap"
