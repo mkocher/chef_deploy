@@ -1,7 +1,25 @@
 include_recipe "joy_of_cooking::daemontools"
 include_recipe "joy_of_cooking::mysql"
+include_recipe "joy_of_cooking::sqlite"
+
 
 app_user = "mkocher"
+
+# nokogiri docs recomend installing from source, but aren't 
+{
+  "libxml2" =>       "2.6.26-2.1.2.8.el5_5.1",
+  "libxml2-devel" => "2.6.26-2.1.2.8.el5_5.1",
+  "libxslt" => "1.1.17-2",
+  "libxslt-devel" => "1.1.17-2.el5_2.2",
+}.each do |package_name, version_string|
+  ['i386', 'x86_64'].each do |arch_string|
+    package package_name do
+      action :install
+      version "#{version_string}.#{arch_string}"
+    end
+  end
+end
+
 
 execute "trust github" do
   command "mkdir -p ~/.ssh/ && echo 'github.com,207.97.227.239 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==' > ~/.ssh/known_hosts"

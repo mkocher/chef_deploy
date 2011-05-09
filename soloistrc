@@ -2,6 +2,7 @@ cookbook_paths:
 - ./chef/cookbooks/
 recipes:
 - joy_of_cooking::application
+- joy_of_cooking::jenkins
 env_variable_switches:
   APP_NAME:
     cookbook_paths: []
