@@ -38,6 +38,7 @@ cat <<'BOOTSTRAP_AS_USER' > /home/$APP_USER/bootstrap_as_user.sh
 set -e
 
 export APP_USER=$1
+cd ~
 
 mkdir -p /home/$APP_USER/rvm/src
 curl -Lskf http://github.com/wayneeseguin/rvm/tarball/156d0b42feba4922ad04 | tar xvz -C/home/$APP_USER/rvm/src --strip 1
@@ -53,7 +54,7 @@ rvm_gemset_create_on_use_flag=1
 RVMRC_CONTENTS
 BOOTSTRAP_AS_USER
 
-echo "app user at the end: $APP_USER"
 chmod a+x /home/$APP_USER/bootstrap_as_user.sh
-su - $APP_USER /home/$APP_USER/bootstrap_as_user.sh $APP_USER
+su $APP_USER /home/$APP_USER/bootstrap_as_user.sh $APP_USER
+echo "finished"
 rm /home/$APP_USER/bootstrap_as_user.sh

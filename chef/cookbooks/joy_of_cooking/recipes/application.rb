@@ -56,7 +56,7 @@ rvm_path=/home/mkocher/.rvm/
 export RAILS_ENV=staging
 source /home/mkocher/.rvm/scripts/rvm
 rvm use ruby-1.8.7-p299@captest
-exec /command/setuidgid mkocher rackup -p 3000
+exec /command/setuidgid mkocher unicorn -p 3000
 }
   mode "0755"
 end
