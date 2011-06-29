@@ -39,9 +39,10 @@ end
 
 desc "bootstrap"
 task :bootstrap do
+  app_user = fetch(:user)
   set :user, "root"
   set :default_shell, "/bin/bash"
   upload "bootstrap.sh", "/root/bootstrap.sh"
   run "chmod a+x /root/bootstrap.sh"
-  run "/root/bootstrap.sh"
+  run "APP_USER=#{app_user} /root/bootstrap.sh"
 end
